@@ -483,6 +483,76 @@ public class APIController {
             }
         }
     }
+    //POST REQUEST FOR NEW CHARGER (added by Abhin[incomplete])
+
+    @ApiOperation(httpMethod = "POST", value = "Create a new charger", notes = "", tags = {"charger", "properties", "2.0.0-rc2"})
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Created"),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 409, message = "Conflict"),
+        @ApiResponse(code = 500, message = "Internal Error")
+    })
+    @PostMapping(value = "/charger")
+    public void post_charger(@RequestBody String _charger, HttpServletResponse response) throws IOException {
+        try {
+            HashMap<String, String> charger_object = objectMapper.readValue(_charger, HashMap.class);
+            String charger_string = charger_object.get("chargeBoxId");
+            if (charger_string == null) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                writeOutput(response, "{\"version\":\"2.0.0-rc2\"}");
+            } else {
+                String parent_string = charger_object.get("parent");
+                if (parent_string != null) {
+                    // Optional<OcppTag.Overview> parent_tag = ocppTagRepository.getOverview(new OcppTagQueryForm()).stream().filter(o -> o.getIdTag().equals(_parent)).findFirst();
+                    // if (parent_string.isPresent()) {
+                    //     // TODO: Proceed to MaxActiveTransactionCount
+                    // } else {
+                    //     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    //     writeOutput(response, "{\"version\":\"2.0.0-rc2\"}");
+                    // }
+                } else {
+                    Integer maxActiveTransactionCount = 1;
+                    try {
+                        maxActiveTransactionCount = Integer.parseInt(charger_object.get("MaxActiveTransactionCount"));
+                        String note = charger_object.get("note");
+                        if (note == null) note = "";
+                        if (parent_string == null) parent_string = "";
+                        JSONObject response_object = new JSONObject();
+                        response_object.put("tag", charger_string);
+                        response_object.put("MaxActiveTransactionCount", maxActiveTransactionCount.toString());
+                        response_object.put("note", note);
+                        response_object.put("parent", parent_string);
+                        OcppTagForm tag_form = new OcppTagForm();
+                        tag_form.setIdTag(charger_string);
+                        tag_form.setParentIdTag(parent_string);
+                        tag_form.setMaxActiveTransactionCount(maxActiveTransactionCount);
+                        tag_form.setNote(note);
+                        try {
+                            ocppTagRepository.addOcppTag(tag_form);
+                            response.setStatus(HttpServletResponse.SC_CREATED);
+                            writeOutput(response, response_object.toString());
+                        } catch (SteveException steveException) {
+                            response.setStatus(HttpServletResponse.SC_CONFLICT);
+                            response_object.put("response", "Tag must be unique");
+                            writeOutput(response, response_object.toString());
+                        } catch (Exception exception) {
+                            // exception.printStackTrace();
+                            response.setStatus(HttpServletResponse.SC_CONFLICT);
+                            writeOutput(response, "{\"version\":\"2.0.0-rc2\"}");
+                        }
+                    } catch (NumberFormatException numberFormatException) {
+                        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                        writeOutput(response, "{\"version\":\"2.0.0-rc2\"}");
+                    }
+                }
+            }
+        } catch (ClassCastException classCastException) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            writeOutput(response, "{\"version\":\"2.0.0-rc2\"}");
+        }
+    }
+
+    //END POST REQUEST FOR ADDING A CHARGER
 
     @ApiOperation(httpMethod = "GET", value = "View the properties of a charger's connector(s)", notes = "", tags = {"connector", "properties", "2.0.0-rc2"})
     @ApiResponses(value = {
