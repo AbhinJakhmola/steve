@@ -13,6 +13,7 @@ import de.rwth.idsg.steve.service.ChargePointHelperService;
 import de.rwth.idsg.steve.service.ChargePointService16_Client;
 import de.rwth.idsg.steve.service.TransactionStopService;
 import de.rwth.idsg.steve.utils.ConnectorStatusFilter;
+import de.rwth.idsg.steve.web.dto.ChargePointQueryForm;
 import de.rwth.idsg.steve.web.dto.OcppTagForm;
 import de.rwth.idsg.steve.web.dto.OcppTagQueryForm;
 import de.rwth.idsg.steve.web.dto.TransactionQueryForm;
@@ -553,6 +554,31 @@ public class APIController {
     }
 
     //END POST REQUEST FOR ADDING A CHARGER
+
+    //DELETE AN EXISTING CHARGER (added by Abhin)
+    @ApiOperation(httpMethod = "DELETE", value = "Delete an existing", notes = "", tags = {"charger", "properties", "2.0.0-rc2"})
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 403, message = "Forbidden"),
+        @ApiResponse(code = 500, message = "Internal Error")
+    })
+    @DeleteMapping(value = "/charger")
+    public void delete_charger(@RequestParam("charger") String _charger, HttpServletResponse response) throws IOException {
+        List<String> chargers = new ArrayList<>();
+        chargers = chargePointRepository.getChargeBoxIds().stream().collect(Collectors.toList());
+        Map<String, Integer> iDPKMap=chargePointRepository.getChargeBoxIdPkPair(chargers);
+        if (iDPKMap.get(_charger) != null) {
+            chargePointRepository.deleteChargePoint(iDPKMap.get(_charger));
+            response.setStatus(HttpServletResponse.SC_OK);
+            writeOutput(response, "{\"version\":\"2.0.0-rc2\"}");
+            }   else {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            writeOutput(response, "{\"version\":\"2.0.0-rc2\"}");
+        }
+    }
+    
+    //End
 
     @ApiOperation(httpMethod = "GET", value = "View the properties of a charger's connector(s)", notes = "", tags = {"connector", "properties", "2.0.0-rc2"})
     @ApiResponses(value = {
