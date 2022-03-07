@@ -13,6 +13,7 @@ import de.rwth.idsg.steve.service.ChargePointHelperService;
 import de.rwth.idsg.steve.service.ChargePointService16_Client;
 import de.rwth.idsg.steve.service.TransactionStopService;
 import de.rwth.idsg.steve.utils.ConnectorStatusFilter;
+import de.rwth.idsg.steve.web.dto.ChargePointForm;
 import de.rwth.idsg.steve.web.dto.ChargePointQueryForm;
 import de.rwth.idsg.steve.web.dto.OcppTagForm;
 import de.rwth.idsg.steve.web.dto.OcppTagQueryForm;
@@ -554,6 +555,52 @@ public class APIController {
     }
 
     //END POST REQUEST FOR ADDING A CHARGER
+
+    //START PUT REQUEST TO UPDATE PROPERTIES OF CHARGER (NEED LIST OF UPGRADEABLE PARAMETERS)
+
+    @ApiOperation(httpMethod = "PUT", value = "Update the properties of a charger", notes = "", tags = {"charger", "properties", "2.0.0-rc2"})
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 403, message = "Forbidden"),
+        @ApiResponse(code = 500, message = "Internal Error")
+    })
+    //required = true, value = "Name of the charger; '*' for all, '~' for active") @RequestParam(name = "charger") String _charger
+
+    @PutMapping(value = "/charger")
+    public void put_charger(@RequestParam("charger") String _charger, @RequestParam(name = "charger") String _response, HttpServletResponse response) throws IOException {
+        List<String> chargers = new ArrayList<>();
+        chargers = chargePointRepository.getChargeBoxIds().stream().collect(Collectors.toList());
+        Map<String, Integer> iDPKMap=chargePointRepository.getChargeBoxIdPkPair(chargers);
+        if (iDPKMap.get(_charger) != null) {
+
+            ChargePointForm charge_form = new ChargePointForm();
+                //charge_form.;
+                //charge_form.setParentIdTag(_parent);
+                //charge_form.setMaxActiveTransactionCount(Integer.parseInt(_MaxActiveTransactionCount));
+                //charge_form.setNote(_note);
+                try {
+                    chargePointRepository.updateChargePoint(charge_form);
+                    response.setStatus(HttpServletResponse.SC_CREATED);
+                    // writeOutput(response, response_object.toString());
+                    writeOutput(response, "{\"version\":\"2.0.0-rc2\"}");
+                } catch (SteveException steveException) {
+                    response.setStatus(HttpServletResponse.SC_CONFLICT);
+                    // response_object.put("response", "Tag must be unique");
+                    // writeOutput(response, response_object.toString());
+                    writeOutput(response, "{\"version\":\"2.0.0-rc2\"}");
+                } catch (Exception exception) {
+                    // exception.printStackTrace();
+                    response.setStatus(HttpServletResponse.SC_CONFLICT);
+                    writeOutput(response, "{\"version\":\"2.0.0-rc2\"}");
+                }            
+            } else {
+                System.out.println("Charger not present");
+            }
+            writeOutput(response, "{\"version\":\"2.0.0-rc2\"}");
+        }
+
+    //END PUT REQUEST TO UPDATE PROPERTIES OF CHARGER
 
     //DELETE AN EXISTING CHARGER (added by Abhin)
     @ApiOperation(httpMethod = "DELETE", value = "Delete an existing", notes = "", tags = {"charger", "properties", "2.0.0-rc2"})
