@@ -63,19 +63,19 @@ public class NotificationService {
     String registration_status_member;
 
     public void ocppStationBooted(String chargeBoxId, Optional<RegistrationStatus> status) {
-        // if (isDisabled_email(OcppStationBooted)) {
-        //     return;
-        // }
+        if (isDisabled_email(OcppStationBooted)) {
+            return;
+        }
 
-        // String subject = format("Received boot notification from '%s'", chargeBoxId);
-        // String body;
-        // String registration_status = "";
-        // if (status.isPresent()) {
-        //     registration_status = status.get().value();
-        //     body = format("Charging station '%s' is in database and has registration status '%s'.", chargeBoxId, registration_status);
-        // } else {
-        //     body = format("Charging station '%s' is NOT in database", chargeBoxId);
-        // }
+        String subject = format("Received boot notification from '%s'", chargeBoxId);
+        String body;
+        String registration_status = "";
+        if (status.isPresent()) {
+            registration_status = status.get().value();
+            body = format("Charging station '%s' is in database and has registration status '%s'.", chargeBoxId, registration_status);
+        } else {
+            body = format("Charging station '%s' is NOT in database", chargeBoxId);
+        }
 
         // System.out.print(body);
         // registration_status_member = registration_status;
@@ -93,7 +93,7 @@ public class NotificationService {
         bodyObject.put("iat", DateTime.now().toString());
         webhookService.sendAsync("charger", bodyObject);
 
-        // mailService.sendAsync(subject, addTimestamp(body));
+        mailService.sendAsync(subject, addTimestamp(body));
     }
 
     public void ocppHeartbeat(String chargeBoxId, String timestamp) {

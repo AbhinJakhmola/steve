@@ -575,10 +575,6 @@ public class APIController {
         if (iDPKMap.get(_charger) != null) {
 
             ChargePointForm charge_form = new ChargePointForm();
-                //charge_form.;
-                //charge_form.setParentIdTag(_parent);
-                //charge_form.setMaxActiveTransactionCount(Integer.parseInt(_MaxActiveTransactionCount));
-                //charge_form.setNote(_note);
                 try {
                     chargePointRepository.updateChargePoint(charge_form);
                     response.setStatus(HttpServletResponse.SC_CREATED);
@@ -603,7 +599,7 @@ public class APIController {
     //END PUT REQUEST TO UPDATE PROPERTIES OF CHARGER
 
     //DELETE AN EXISTING CHARGER (added by Abhin)
-    @ApiOperation(httpMethod = "DELETE", value = "Delete an existing", notes = "", tags = {"charger", "properties", "2.0.0-rc2"})
+    @ApiOperation(httpMethod = "DELETE", value = "Delete an existing charger", notes = "", tags = {"charger", "properties", "2.0.0-rc2"})
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK"),
         @ApiResponse(code = 400, message = "Bad Request"),

@@ -67,6 +67,13 @@
         <tr><td>Recipients:</td>
             <td><form:textarea path="recipients"/></td>
         </tr>
+        <tr>
+            <td>Notify when... </td>
+            <td>
+                <form:checkboxes items="${features}" path="enabledFeatures"
+                                 itemLabel="text" delimiter="<br/>"/>
+            </td>
+        </tr>
         <tr><td>Enable Webhook Notifications?:</td><td><form:checkbox path="webhookEnabled"/></td></tr>
         <tr><td>Webhook Control Link:</td><td><form:input path="webhook"/></td></tr>
         <tr>
