@@ -79,7 +79,7 @@
         <tr>
             <td>Notify when... </td>
             <td>
-                <form:checkboxes items="${features}" path="enabledFeatures"
+                <form:checkboxes items="${features}" path="webhookEnabledFeatures"
                                  itemLabel="text" delimiter="<br/>"/>
             </td>
         </tr>

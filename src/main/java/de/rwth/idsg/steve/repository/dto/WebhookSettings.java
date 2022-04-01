@@ -15,5 +15,9 @@ import java.util.List;
 public class WebhookSettings {
     private final boolean webhookEnabled;
     private final String webhook;
-    private final List<NotificationFeature> enabledFeatures;
+    private final List<NotificationFeature> webhookEnabledFeatures;
+    /*public List<NotificationFeature> webhookEnabledFeatures()
+    {
+        return enabledFeatures;
+    }*/
 }
