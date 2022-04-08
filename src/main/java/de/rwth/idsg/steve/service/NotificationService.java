@@ -290,11 +290,11 @@ public class NotificationService {
 
 
     private boolean isDisabled_webhook(NotificationFeature f) {
-        MailSettings settings = mailService.getSettings();
+        WebhookSettings settings = webhookService.getSettings();
 
-        boolean isEnabled = settings.isEnabled()
-                && settings.getEnabledFeatures().contains(f)
-                && !settings.getRecipients().isEmpty();
+        boolean isEnabled = settings.isWebhookEnabled()
+                && settings.getEnabledFeatures().contains(f);
+                //&& !settings.isEmpty();
 
         return !isEnabled;
     }

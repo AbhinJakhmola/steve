@@ -20,6 +20,8 @@ package de.rwth.idsg.steve.web.dto;
 
 import de.rwth.idsg.steve.NotificationFeature;
 import de.rwth.idsg.steve.web.validation.EmailCollection;
+import de.rwth.idsg.steve.web.validation.WebhookCollection;
+import de.rwth.idsg.steve.repository.dto.WebhookSettings;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -73,4 +75,7 @@ public class SettingsForm {
     private List<String> recipients;
 
     private List<NotificationFeature> enabledFeatures;
+
+    @WebhookCollection
+    private List<NotificationFeature> webhookEnabledFeatures;
 }

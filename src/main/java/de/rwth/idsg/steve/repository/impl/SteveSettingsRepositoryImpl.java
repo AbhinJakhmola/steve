@@ -117,7 +117,7 @@ public class SteveSettingsRepositoryImpl implements SteveSettingsRepository {
         return WebhookSettings.builder()
                             .webhookEnabled(r.getWebhookEnabled()) 
                             .webhook(r.getWebhook())
-                            .webhookEnabledFeatures(features)
+                            .enabledFeatures(features)
                             .build();
     }
 

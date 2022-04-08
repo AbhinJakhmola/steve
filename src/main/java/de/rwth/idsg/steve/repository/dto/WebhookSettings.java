@@ -1,9 +1,10 @@
 package de.rwth.idsg.steve.repository.dto;
 
+import jooq.steve.db.tables.records.SteveSettingsRecord;
 import de.rwth.idsg.steve.NotificationFeature;
+import de.rwth.idsg.steve.repository.impl.SteveSettingsRepositoryImpl;
 import lombok.Builder;
 import lombok.Getter;
-
 import java.util.List;
 
 /**
@@ -13,11 +14,12 @@ import java.util.List;
 @Getter
 @Builder
 public class WebhookSettings {
+
     private final boolean webhookEnabled;
     private final String webhook;
-    private final List<NotificationFeature> webhookEnabledFeatures;
-    /*public List<NotificationFeature> webhookEnabledFeatures()
+    private final List<NotificationFeature> enabledFeatures;
+    public  List<NotificationFeature> getEnabledFeatures()
     {
         return enabledFeatures;
-    }*/
+    }
 }
